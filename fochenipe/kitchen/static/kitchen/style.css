@@ -1,0 +1,15 @@
+body {
+  padding-top: 50px;
+}
+.main {
+  padding: 40px 15px;
+  width: 500px;
+}
+
+table.food {
+	margin-top: 20px;
+}
+
+.btn {
+	margin-top: 20px;
+}

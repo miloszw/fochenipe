@@ -1,0 +1,48 @@
+{% extends "kitchen/base.html" %}
+
+{% block body %}
+<div class="panel panel-default" id="panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">Välkommen till Fochenipe (<i><b>Fo</b>odKit<b>chen</b>Rec<b>ipe</b></i>)</h3>
+    </div>
+    <div class="panel-body">
+        {% if request.session.kitchen %}
+        Följande matvaror finns i ditt kök
+
+        <table class="table table-hover food">
+            <tr>
+                <th>Vara</th>
+                <th>Mängd</th>
+            </tr>
+            {% for item in food %}
+                <tr>
+                    <td><a href="{% url 'kitchen_add' 'food' item.id %}">{{ item.food_item.name }}</a></td>
+                    {% if item.amount > 0 %}
+                    <td>{{ item.amount }} {{ item.food_item.measure }}</td>
+                    {% else %}
+                    <td>Okänt</td>    
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr><td>Du har inga varor i ditt kök :(</td><td></td></tr>
+            {% endfor %}
+        </table>
+
+        <a href="{% url 'kitchen_add' 'food' %}" class="btn btn-success btn-block">Lägg till varor</a>
+        <a href="{% url 'kitchen_select' 0 %}" class="btn btn-info btn-block">Byt kök</a>
+
+        {% else %}
+        Välj kök<br>
+            {% if kitchens %}
+                <ul>
+                {% for kitchen in kitchens %}
+                    <li><a href="{% url 'kitchen_select' kitchen.id %}">{{ kitchen }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <a href="{% url 'kitchen_add' 'kitchen' %}" class="btn btn-success btn-block">Lägg till kök</a>
+
+        {% endif %}
+    </div>
+</div>
+{% endblock body %}

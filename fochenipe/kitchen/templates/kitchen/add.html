@@ -1,0 +1,18 @@
+{% extends "kitchen/base.html" %}
+
+{% block body %}
+<div class="panel panel-default" id="panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">Lägg till eller ändra {{ subject }}</h3>
+    </div>
+    <div class="panel-body">
+        <form action="" method="post" role="form">
+            <div class="form-group">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Spara {{ subject }}" class="btn btn-success btn-block">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock body %}
