@@ -37,17 +37,18 @@ class Food(models.Model):
     used_in = models.ForeignKey(Recipe, related_name='ingredients',
                                 blank=True, null=True)
 
+    def get_quantity(self):
+        return "%s %s" % (self.amount, self.food_item.measure)
+
     class Meta:
         unique_together = (('food_item', 'is_in'), ('food_item', 'used_in'))
 
     def save(self, *args, **kwargs):
-        try:
-            # We want to delete existing model to avoid unique_together update bug
-            self.delete()
-            print "ok"
-        except:
-            pass
         if self.amount == 0:
+            try:
+                self.delete()
+            except:
+                pass
             return
         super(Food, self).save(*args, **kwargs)
 

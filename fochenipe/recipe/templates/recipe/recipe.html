@@ -8,7 +8,7 @@
     <div class="panel-body">
         <ul class="mylist">
             {% for recipe in recipes %}
-                <li>{{ recipe.name }}</li>
+                <li><a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a></li>
             {% empty %}
                 Finns inga tillagda recept
             {% endfor %}

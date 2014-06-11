@@ -1,0 +1,26 @@
+{% extends "kitchen/base.html" %}
+
+{% block body %}
+<div class="panel panel-default" id="panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">Matlagningsrecept</h3>
+    </div>
+    <div class="panel-body">
+        {{ recipe.name }}
+        {{ recipe.type }}
+        {{ recipe.description }}
+        <ul>
+        {% for item in recipe.ingredients.all %}
+            <li>{{ item.get_quantity }} - {{ item.food_item.name }}</li>
+        {% endfor %}
+        </ul>
+        {% if enough_ingredients %}
+        <a href="{% url 'recipe_make' recipe.pk %}" class="btn btn-success btn-block">Laga!</a>
+        {% else %}
+        <a href="" class="btn btn-success btn-block disabled">Vissa ingredienser fattas!</a>
+        {% endif %}
+        <a href="{% url 'recipe_del' recipe.pk %}" class="btn btn-danger btn-block">Ta bort</a>
+        <a href="{% url 'recipe_home' %}" class="btn btn-info btn-block">Gå tillbaka</a>
+    </div>
+</div>
+{% endblock body %}
