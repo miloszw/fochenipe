@@ -6,18 +6,30 @@
         <h3 class="panel-title">Matlagningsrecept</h3>
     </div>
     <div class="panel-body">
-        {{ recipe.name }}
-        {{ recipe.type }}
-        {{ recipe.description }}
+        <h3>{{ recipe.name }}</h3>
+        <h5>{{ recipe.type }}</h5>
+        <p>{{ recipe.description }}</p>
         <ul>
         {% for item in recipe.ingredients.all %}
             <li>{{ item.get_quantity }} - {{ item.food_item.name }}</li>
         {% endfor %}
         </ul>
+        {% if missing_ingredients %}
+            <div class="panel panel-default etm">
+               Du saknar eller har okänt antal av följande ingredienser:
+                <ul>
+                    {% for ingredient, amount in missing_ingredients.items %}
+                        <li>{{ ingredient.name }} - {{ amount }} {{ ingredient.measure }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         {% if enough_ingredients %}
         <a href="{% url 'recipe_make' recipe.pk %}" class="btn btn-success btn-block">Laga!</a>
+        {% elif perhaps_enough_ingredients %}
+        <a href="{% url 'recipe_make' recipe.pk %}" class="btn btn-warning btn-block">Laga! (Vissa ingredienser kan saknas)</a>
         {% else %}
-        <a href="" class="btn btn-success btn-block disabled">Vissa ingredienser fattas!</a>
+        <a href="" class="btn btn-warning btn-block disabled">Vissa ingredienser fattas!</a>
         {% endif %}
         <a href="{% url 'recipe_del' recipe.pk %}" class="btn btn-danger btn-block">Ta bort</a>
         <a href="{% url 'recipe_home' %}" class="btn btn-info btn-block">Gå tillbaka</a>

@@ -12,6 +12,9 @@ from kitchen.models import Kitchen
 
 def home(request):
     recipes = Recipe.objects.all()
+    kitchen = Kitchen.objects.get(pk=request.session['kitchen'])
+    for recipe in recipes:
+        recipe.ok = recipe.can_make(kitchen)
     return render(request, 'recipe/recipe.html', {'recipes': recipes})
 
 
@@ -28,9 +31,18 @@ def add(request):
 def detail(request, id):
     recipe = Recipe.objects.get(pk=id)
     k_id = request.session['kitchen']
-    enough_ingredients = recipe.can_make(Kitchen.objects.get(pk=k_id))
+    kitchen = Kitchen.objects.get(pk=k_id)
+    
+    enough_ingredients = recipe.can_definitely_make(kitchen)
+    perhaps_enough_ingredients = recipe.can_make(kitchen)
+
+    missing_ingredients = recipe.get_missing_ingredients(kitchen)
+    
+
     return render(request, 'recipe/detail.html', {'recipe': recipe,
-        'enough_ingredients': enough_ingredients})
+        'enough_ingredients': enough_ingredients,
+        'perhaps_enough_ingredients': perhaps_enough_ingredients,
+        'missing_ingredients': missing_ingredients})
 
 
 def delete(request,id):
@@ -49,7 +61,10 @@ def make(request, recipe_id):
 
     for item in recipe.ingredients.all():
         kitchen_item = kitchen.food.get(food_item=item.food_item)
-        kitchen_item.amount -= item.amount
+        try:
+            kitchen_item.amount -= item.amount
+        except TypeError:
+            kitchen_item.amount = 0
         kitchen_item.save()
 
     messages.success(request, 'Förbrukat respektive ingredienser')
