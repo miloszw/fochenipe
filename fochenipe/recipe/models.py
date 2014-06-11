@@ -27,15 +27,27 @@ class Recipe(models.Model):
                 return False
         return True
 
-    def get_missing_ingredients(self, kitchen):
+    def get_missing_ingredients(self, kitchen, ingredients=None):
         missing = {}
-        for item in self.ingredients.all():
+        if ingredients == None:
+            ingredients = self.ingredients.all()
+
+        # First collate items
+        dict_ingredients = {}
+        for item in ingredients:
+            if item.food_item in dict_ingredients:
+                dict_ingredients[item.food_item] += item.amount
+            else:
+                dict_ingredients[item.food_item] = item.amount
+
+        # Then check missing amount
+        for food_item, item_amount in dict_ingredients.items():
             try:
-                amount_missing = item.amount - kitchen.food.get(food_item=item.food_item).amount
+                amount_missing = item_amount - kitchen.food.get(food_item=food_item).amount
             except (ObjectDoesNotExist, TypeError):
-                amount_missing = item.amount
+                amount_missing = item_amount
             if amount_missing > 0:
-                missing[item.food_item] = amount_missing
+                missing[food_item] = amount_missing
         return missing
 
 

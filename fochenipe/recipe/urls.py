@@ -6,4 +6,5 @@ urlpatterns = patterns('',
     url(r'^(\d+)$', 'recipe.views.detail', name='recipe_detail'),
     url(r'^(\d+)/make$', 'recipe.views.make', name='recipe_make'),
     url(r'^(\d+)/delete$', 'recipe.views.delete', name='recipe_del'),
+    url(r'^generateshoppinglist$', 'recipe.views.generate_shopping_list', name='recipe_gen_list'),
 )

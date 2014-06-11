@@ -1,0 +1,14 @@
+{% extends "kitchen/base.html" %}
+
+{% block body %}
+<div class="panel panel-default" id="panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">Din shopping lista</h3>
+    </div>
+    <div class="panel-body">
+        {% for ingredient, amount in shopping_list.items %}
+            <li>{{ ingredient.name }} - {{ amount }} {{ ingredient.measure }}</li>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

@@ -69,3 +69,17 @@ def make(request, recipe_id):
 
     messages.success(request, 'Förbrukat respektive ingredienser')
     return redirect('home')
+
+
+def generate_shopping_list(request):
+    if request.method == 'POST':
+        ingredients = []
+        kitchen = Kitchen.objects.get(pk=request.session['kitchen'])
+        
+        for recipe_id in request.POST.getlist('recipe_id'):
+            recipe = Recipe.objects.get(pk=recipe_id)
+            ingredients += recipe.ingredients.all()
+
+        print ingredients
+        shopping_list = recipe.get_missing_ingredients(kitchen, ingredients)
+    return render(request, 'recipe/shopping_list.html', {'shopping_list': shopping_list})
